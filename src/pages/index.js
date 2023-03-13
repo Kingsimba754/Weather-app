@@ -1,35 +1,32 @@
-import Head from 'next/head'
-import { Inter } from 'next/font/google'
-import Image from 'next/image'
-const inter = Inter({ subsets: ['latin'] })
-import axios from 'axios'
-import { useState } from 'react'
-import{BsSearch} from 'react-icons/bs'
-import Weather from '../../components/Weather';
-import Spinner from 'components/Spinner.jsx'
+import Head from "next/head";
+import Image from "next/image";
+import axios from "axios";
+import { useState } from "react";
+import { BsSearch } from "react-icons/bs";
+import Weather from "../../components/Weather";
+import Spinner from "components/Spinner.jsx";
 
 export default function Home() {
+  const [city, setCity] = useState("");
+  const [weather, setWeather] = useState({});
+  const [loading, setLoading] = useState(false);
 
-  const[city,setCity] = useState('');
-  const[weather,setWeather] = useState({});
-  const[loading, setLoading] = useState(false);
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`;
 
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`
-
-  const fetchWeather = (e)=> {
-    e.preventDefault()
-    setLoading(true)
-    axios.get(url).then((response)=> {
-      setWeather(response.data)
+  const fetchWeather = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    axios.get(url).then((response) => {
+      setWeather(response.data);
       // console.log(response.data)
-    })
-    setCity('')
-    setLoading(false)
-  }
+    });
+    setCity("");
+    setLoading(false);
+  };
 
-  if (loading){
-    return<Spinner/>
-  }else{
+  if (loading) {
+    return <Spinner />;
+  } else {
     return (
       <>
         <Head>
@@ -38,30 +35,36 @@ export default function Home() {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-  
-          <h1 className='text-3xl text-center underline'>Next Weather App</h1>
-          <div className='absoulte top-0 left-0 right-0 bottom-0 bg-black/40 z-[1]' />
-          <Image src = 'https://images.unsplash.com/photo-1558486012-817176f84c6d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=670&q=80' 
-          className='object-cover'layout='fill' />
-          <div className='relative flex justify-between items-center max-w-[500px] w-full m-auto text white z-10'>
-            <form onSubmit={fetchWeather} className='flex justify-between items-center w-full m-auto p-3 bg-transparent border border-gray-300 text-white rounded-2xl'>
-              <div>
-                <input 
-                onChange = {(e)=> setCity(e.target.value)}
-                className='bg-transparent border-none text-black foucs:outline-none text-2xl placeholder:' 
-                type="text" 
-                placeholder='Search city' />
-              </div>
-              <button onClick={fetchWeather}><BsSearch size={20} /></button>
-            </form>
-          </div>
-          {/* Weather */}
-          
-          {weather.main && <Weather data ={weather} />}
-      
+
+        <h1 className="text-3xl text-center underline">Next Weather App</h1>
+        <div className="absoulte top-0 left-0 right-0 bottom-0 bg-black/40 z-[1]" />
+        <Image
+          src="https://images.unsplash.com/photo-1558486012-817176f84c6d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=670&q=80"
+          className="object-cover"
+          layout="fill"
+        />
+        <div className="relative flex justify-between items-center max-w-[500px] w-full m-auto text white z-10">
+          <form
+            onSubmit={fetchWeather}
+            className="flex justify-between items-center w-full m-auto p-3 bg-transparent border border-gray-300 text-white rounded-2xl"
+          >
+            <div>
+              <input
+                onChange={(e) => setCity(e.target.value)}
+                className="bg-transparent border-none text-black foucs:outline-none text-2xl placeholder:"
+                type="text"
+                placeholder="Search city"
+              />
+            </div>
+            <button onClick={fetchWeather}>
+              <BsSearch size={20} />
+            </button>
+          </form>
+        </div>
+        {/* Weather */}
+
+        {weather.main && <Weather data={weather} />}
       </>
-    )
+    );
   }
- 
- 
 }
